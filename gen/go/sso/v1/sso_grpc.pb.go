@@ -19,18 +19,18 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Auth_Register_FullMethodName = "/auth.Auth/Register"
-	Auth_Login_FullMethodName    = "/auth.Auth/Login"
-	Auth_IsRoot_FullMethodName   = "/auth.Auth/IsRoot"
+	Auth_RegisterV1_FullMethodName = "/auth.Auth/RegisterV1"
+	Auth_LoginV1_FullMethodName    = "/auth.Auth/LoginV1"
+	Auth_IsRootV1_FullMethodName   = "/auth.Auth/IsRootV1"
 )
 
 // AuthClient is the client API for Auth service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthClient interface {
-	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
-	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
-	IsRoot(ctx context.Context, in *IsRootRequest, opts ...grpc.CallOption) (*IsRootResponse, error)
+	RegisterV1(ctx context.Context, in *RegisterRequestV1, opts ...grpc.CallOption) (*RegisterResponseV1, error)
+	LoginV1(ctx context.Context, in *LoginRequestV1, opts ...grpc.CallOption) (*LoginResponseV1, error)
+	IsRootV1(ctx context.Context, in *IsRootRequestV1, opts ...grpc.CallOption) (*IsRootResponseV1, error)
 }
 
 type authClient struct {
@@ -41,30 +41,30 @@ func NewAuthClient(cc grpc.ClientConnInterface) AuthClient {
 	return &authClient{cc}
 }
 
-func (c *authClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
+func (c *authClient) RegisterV1(ctx context.Context, in *RegisterRequestV1, opts ...grpc.CallOption) (*RegisterResponseV1, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RegisterResponse)
-	err := c.cc.Invoke(ctx, Auth_Register_FullMethodName, in, out, cOpts...)
+	out := new(RegisterResponseV1)
+	err := c.cc.Invoke(ctx, Auth_RegisterV1_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+func (c *authClient) LoginV1(ctx context.Context, in *LoginRequestV1, opts ...grpc.CallOption) (*LoginResponseV1, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(LoginResponse)
-	err := c.cc.Invoke(ctx, Auth_Login_FullMethodName, in, out, cOpts...)
+	out := new(LoginResponseV1)
+	err := c.cc.Invoke(ctx, Auth_LoginV1_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authClient) IsRoot(ctx context.Context, in *IsRootRequest, opts ...grpc.CallOption) (*IsRootResponse, error) {
+func (c *authClient) IsRootV1(ctx context.Context, in *IsRootRequestV1, opts ...grpc.CallOption) (*IsRootResponseV1, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(IsRootResponse)
-	err := c.cc.Invoke(ctx, Auth_IsRoot_FullMethodName, in, out, cOpts...)
+	out := new(IsRootResponseV1)
+	err := c.cc.Invoke(ctx, Auth_IsRootV1_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -75,9 +75,9 @@ func (c *authClient) IsRoot(ctx context.Context, in *IsRootRequest, opts ...grpc
 // All implementations must embed UnimplementedAuthServer
 // for forward compatibility.
 type AuthServer interface {
-	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
-	Login(context.Context, *LoginRequest) (*LoginResponse, error)
-	IsRoot(context.Context, *IsRootRequest) (*IsRootResponse, error)
+	RegisterV1(context.Context, *RegisterRequestV1) (*RegisterResponseV1, error)
+	LoginV1(context.Context, *LoginRequestV1) (*LoginResponseV1, error)
+	IsRootV1(context.Context, *IsRootRequestV1) (*IsRootResponseV1, error)
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -88,14 +88,14 @@ type AuthServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAuthServer struct{}
 
-func (UnimplementedAuthServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
+func (UnimplementedAuthServer) RegisterV1(context.Context, *RegisterRequestV1) (*RegisterResponseV1, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegisterV1 not implemented")
 }
-func (UnimplementedAuthServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+func (UnimplementedAuthServer) LoginV1(context.Context, *LoginRequestV1) (*LoginResponseV1, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LoginV1 not implemented")
 }
-func (UnimplementedAuthServer) IsRoot(context.Context, *IsRootRequest) (*IsRootResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method IsRoot not implemented")
+func (UnimplementedAuthServer) IsRootV1(context.Context, *IsRootRequestV1) (*IsRootResponseV1, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IsRootV1 not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
 func (UnimplementedAuthServer) testEmbeddedByValue()              {}
@@ -118,56 +118,56 @@ func RegisterAuthServer(s grpc.ServiceRegistrar, srv AuthServer) {
 	s.RegisterService(&Auth_ServiceDesc, srv)
 }
 
-func _Auth_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegisterRequest)
+func _Auth_RegisterV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterRequestV1)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServer).Register(ctx, in)
+		return srv.(AuthServer).RegisterV1(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Auth_Register_FullMethodName,
+		FullMethod: Auth_RegisterV1_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).Register(ctx, req.(*RegisterRequest))
+		return srv.(AuthServer).RegisterV1(ctx, req.(*RegisterRequestV1))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Auth_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoginRequest)
+func _Auth_LoginV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequestV1)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServer).Login(ctx, in)
+		return srv.(AuthServer).LoginV1(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Auth_Login_FullMethodName,
+		FullMethod: Auth_LoginV1_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).Login(ctx, req.(*LoginRequest))
+		return srv.(AuthServer).LoginV1(ctx, req.(*LoginRequestV1))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Auth_IsRoot_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(IsRootRequest)
+func _Auth_IsRootV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IsRootRequestV1)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServer).IsRoot(ctx, in)
+		return srv.(AuthServer).IsRootV1(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Auth_IsRoot_FullMethodName,
+		FullMethod: Auth_IsRootV1_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).IsRoot(ctx, req.(*IsRootRequest))
+		return srv.(AuthServer).IsRootV1(ctx, req.(*IsRootRequestV1))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -180,16 +180,16 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AuthServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Register",
-			Handler:    _Auth_Register_Handler,
+			MethodName: "RegisterV1",
+			Handler:    _Auth_RegisterV1_Handler,
 		},
 		{
-			MethodName: "Login",
-			Handler:    _Auth_Login_Handler,
+			MethodName: "LoginV1",
+			Handler:    _Auth_LoginV1_Handler,
 		},
 		{
-			MethodName: "IsRoot",
-			Handler:    _Auth_IsRoot_Handler,
+			MethodName: "IsRootV1",
+			Handler:    _Auth_IsRootV1_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

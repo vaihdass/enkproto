@@ -5,34 +5,34 @@ package auth;
 option go_package = "github.com/vaihdass/enkproto/sso";
 
 service Auth {
-  rpc Register (RegisterRequest) returns (RegisterResponse);
-  rpc Login (LoginRequest) returns (LoginResponse);
-  rpc IsRoot (IsRootRequest) returns (IsRootResponse);
+  rpc RegisterV1 (RegisterRequestV1) returns (RegisterResponseV1);
+  rpc LoginV1 (LoginRequestV1) returns (LoginResponseV1);
+  rpc IsRootV1 (IsRootRequestV1) returns (IsRootResponseV1);
 }
 
-message RegisterRequest {
+message RegisterRequestV1 {
   string email = 1; // Email of the user to register
   string password = 2; // Password of the user to register
 }
 
-message RegisterResponse {
+message RegisterResponseV1 {
   string user_id = 1; // User ID of the registered user
 }
 
-message LoginRequest {
+message LoginRequestV1 {
   string email = 1; // Email of the user to register
   string password = 2; // Password of the user to register
   string app_id = 3; // ID of the app to login to
 }
 
-message LoginResponse {
+message LoginResponseV1 {
   string token = 1; // Auth token of the logged in user
 }
 
-message IsRootRequest {
+message IsRootRequestV1 {
   string user_id = 1; // User ID to validate is root (admin)
 }
 
-message IsRootResponse {
+message IsRootResponseV1 {
   bool is_root = 1; // Indicates whether the user is root (admin)
 }
