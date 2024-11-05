@@ -1,0 +1,21 @@
+version: v2
+
+modules:
+  - path: proto
+
+deps:
+  - buf.build/envoyproxy/protoc-gen-validate
+
+lint:
+  use:
+    - BASIC
+  service_suffix: Service
+  enum_zero_value_suffix: _UNSPECIFIED
+  disallow_comment_ignores: false
+  rpc_allow_same_request_response: false
+  rpc_allow_google_protobuf_empty_requests: false
+  rpc_allow_google_protobuf_empty_responses: false
+
+breaking:
+  use:
+    - FILE

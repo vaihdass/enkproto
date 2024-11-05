@@ -1,9 +1,33 @@
 version: "3"
 
+vars:
+  PROTOC_OUT_PATH: './gen/go'
+
 tasks:
+  install-deps:
+    aliases:
+      - deps
+    desc: "Install packages and/or binaries that this project depends on"
+    deps: [":install-bin-deps", ":install-protogen-vendor"]
+    cmds:
+      - go mod tidy
+      - go get -u ./...
+      - go mod download
+  :install-bin-deps:
+    cmds:
+      - go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+      - go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+      - go install github.com/envoyproxy/protoc-gen-validate@latest
+  :install-protogen-vendor:
+    cmds:
+      - |
+        git clone --depth=1 \
+        https://github.com/envoyproxy/protoc-gen-validate \
+        vendor-protogen/validate
+
   generate:
     aliases:
       - gen
     desc: "Generate code from protobuf files"
     cmds:
-      - protoc -I proto proto/sso/v1/sso.proto --go_out=./gen/go --go_opt=paths=source_relative --go-grpc_out=./gen/go --go-grpc_opt=paths=source_relative
+      - buf generate
